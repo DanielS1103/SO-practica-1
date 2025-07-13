@@ -2,27 +2,40 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <math.h>
 
 #define NUM_THREADS 4
-#define NUM_TERMS 100000000
+#define TARGET 20
 
-double fac = 0.0;
-sem_t sem;
+typedef struct{
+    int start;
+    int end;
+    unsigned long long partial_result;
+} ThreadData;
 
-unsigned long long factorial(unsigned int n){
-    if(n == 0) return 1;
-    return n * factorial(n-1);
+sem_t semaphore;
+unsigned long long global_result = 1;
+
+void* calculate_partial(void* arg){
+    ThreadData* data = (ThreadData*)arg;
+    data->partial_result = 1;
+
+    for(int i = data -> start; i <= data -> end; i++){
+        data -> partial_result = *= i;
+    }
+
+    sem_wait(&semaphore);
+    global_result *= data -> partial_result;
+    sem_post(&semaphore);
+
+    pthread_exit(NULL);
 }
 
 int main(){
-    unsigned int numero;
-    printf("ingrese un numero positivo: ");
-    if(scanf("%u", &numero) != 1){
-        printf("entrada invalida. \n");
-        return 1;
-    }
+    pthread_t threads[NUM_THREADS];
+    ThreadData thread_data[NUM_THREADS];
 
-    printf("el facotorial de %u es: %llu\n", numero, factorial(numero));
-    return 0;  
+    sem_init(&semaphote, 0, 1);
+
+    int segment = TARGET / NUM_THREADS;
+    int start = 1;
 }
