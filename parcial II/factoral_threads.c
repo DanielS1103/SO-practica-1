@@ -15,7 +15,7 @@ typedef struct{
 sem_t semaphore;
 unsigned long long global_result = 1;
 
-void* calculate_partial(void* arg){
+void *calculate_partial(void* arg){
     ThreadData* data = (ThreadData*)arg;
     data->partial_result = 1;
 
